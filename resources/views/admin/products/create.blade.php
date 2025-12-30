@@ -2,10 +2,22 @@
 
 @section('content')
 <div class="container-fluid">
+     @if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6 class="fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Gagal Menyimpan!</h6>
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
     <div class="card shadow mb-4" style="max-width: 800px;">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Form Tambah Produk Baru</h6>
         </div>
+
         <div class="card-body">
             <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
