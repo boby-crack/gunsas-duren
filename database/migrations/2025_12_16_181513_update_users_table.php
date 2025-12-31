@@ -17,7 +17,7 @@ return new class extends Migration
         $table->string('no_hp')->nullable();
         $table->text('alamat')->nullable();
         // Kolom status untuk verifikasi admin (opsional, sesuai bab 1)
-        $table->string('status_akun')->default('active');
+        $table->string('status_akun')->default('pending');
     });
 }
 

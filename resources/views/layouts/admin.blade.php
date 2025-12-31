@@ -63,10 +63,10 @@
             </a>
         </li>
 
-        <li class="nav-item {{ Request::routeIs('admin.resellers.*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('admin.resellers.index') }}">
-        <i class="fas fa-fw fa-users"></i> {{-- Sesuaikan ikon Anda --}}
-        <span>Data Reseller</span>
+        <li class="nav-item ">
+        <a class="nav-link {{ Request::routeIs('admin.resellers.*') ? 'bg-primary text-white' : 'text-secondary' }}"  href="{{ route('admin.resellers.index') }}">
+        <i class="fas fa-fw fa-users me-2"></i> {{-- Sesuaikan ikon Anda --}}
+        <span> Data Reseller</span>
 
         {{-- LOGIKA BADGE NOTIFIKASI --}}
         @php

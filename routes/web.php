@@ -104,7 +104,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['reseller.active'])->group(function () {
 
         // Fitur Belanja (Keranjang)
-        Route::get('/add-to-cart/{id}', [CatalogController::class, 'addToCart'])->name('add.to.cart');
+        Route::post('/add-to-cart/{id}', [CatalogController::class, 'addToCart'])->name('add.to.cart');
         Route::get('/keranjang', [CatalogController::class, 'cart'])->name('cart.index');
         Route::delete('/remove-from-cart', [CatalogController::class, 'removeCart'])->name('remove.from.cart');
 

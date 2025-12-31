@@ -28,7 +28,7 @@
         .product-card { border: none; border-radius: 15px; background: #fff; transition: 0.3s; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
         .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .product-img { height: 220px; object-fit: cover; width: 100%; }
-        .price-blur { filter: blur(4px); user-select: none; color: #999; }
+        /* .price-blur class dihapus karena harga sekarang selalu terlihat */
         .badge-reseller { background: #ffeeba; color: #856404; font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; }
 
         /* Lokasi Hover */
@@ -221,26 +221,36 @@
                             <h5 class="fw-bold mb-2">{{ $product->nama_produk }}</h5>
                             <p class="text-muted small mb-3">{{ Str::limit($product->deskripsi, 50) }}</p>
 
-                            @auth
-                                {{-- Jika Login, Tampilkan Harga --}}
-                                <h5 class="text-warning fw-bold mb-3">Rp {{ number_format($product->harga_mitra, 0, ',', '.') }}</h5>
+                            <h5 class="text-warning fw-bold mb-3">Rp {{ number_format($product->harga_mitra, 0, ',', '.') }}</h5>
 
-                                {{-- Logic Tombol Berdasarkan Status --}}
-                                @if(Auth::user()->status_akun == 'active')
-                                    <a href="{{ route('add.to.cart', $product->id) }}" class="btn btn-sm btn-outline-dark w-100 rounded-pill">
-                                        <i class="fas fa-shopping-cart me-2"></i> Pesan Sekarang
-                                    </a>
-                                @else
-                                    {{-- Jika Pending/Waiting, klik tombol akan dilempar middleware ke halaman verifikasi --}}
+                            @auth
+                                {{-- Jika Login --}}
+                               @if(Auth::user()->status_akun == 'active')
+    {{-- FORMULIR PEMBELIAN (MINIMAL 5) --}}
+                                <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
+                                    @csrf
+                                    {{-- Input Jumlah --}}
+                                    <div class="d-flex align-items-center justify-content-between mb-2 border rounded px-2 py-1">
+                                        <button type="button" class="btn btn-sm text-secondary" onclick="updateQty(this, -5)"><i class="fas fa-minus"></i></button>
+                                        <input type="number" name="quantity" class="form-control border-0 text-center fw-bold bg-transparent p-0" value="5" min="5" style="width: 50px;" readonly>
+                                        <button type="button" class="btn btn-sm text-secondary" onclick="updateQty(this, 5)"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    
+                                    {{-- Tombol Submit --}}
+                                    <button type="submit" class="btn btn-sm btn-dark w-100 rounded-pill">
+                                        <i class="fas fa-cart-plus me-2"></i> Tambah Stok
+                                    </button>
+                                </form>
+                            @else
+                                    {{-- Jika Pending/Waiting --}}
                                     <a href="{{ route('dashboard') }}" class="btn btn-sm btn-secondary w-100 rounded-pill">
                                         <i class="fas fa-lock me-2"></i> Verifikasi Akun Dulu
                                     </a>
                                 @endif
                             @else
-                                {{-- Jika Belum Login --}}
-                                <h5 class="price-blur mb-3">Rp 1XX.000</h5>
+                                {{-- Jika Belum Login (Guest) - Tombol ajakan login --}}
                                 <a href="{{ route('login') }}" class="btn btn-sm btn-primary-custom w-100">
-                                    <i class="fas fa-lock me-2"></i> Login Lihat Harga
+                                    <i class="fas fa-sign-in-alt me-2"></i> Masuk untuk Memesan
                                 </a>
                             @endauth
 
@@ -433,7 +443,7 @@
             </div>
             <hr class="border-secondary">
             <div class="text-center small text-secondary">
-                &copy; {{ date('Y') }} PT. Gunsas Jaya Berkah. All Rights Reserved.
+                © {{ date('Y') }} PT. Gunsas Jaya Berkah. All Rights Reserved.
             </div>
         </div>
     </footer>
@@ -445,6 +455,16 @@
        style="position: fixed; bottom: 30px; right: 30px; z-index: 1000; background-color: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-decoration: none; transition: 0.3s;">
         <i class="fab fa-whatsapp" style="font-size: 35px;"></i>
     </a>
+
+    <script>
+    function updateQty(btn, amount) {
+        const form = btn.closest('form');
+        const input = form.querySelector('input[name="quantity"]');
+        let currentVal = parseInt(input.value);
+        let newVal = currentVal + amount;
+        if (newVal >= 5) input.value = newVal;
+    }
+</script>
 
 </body>
 </html>

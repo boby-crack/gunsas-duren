@@ -16,31 +16,42 @@ class CatalogController extends Controller
     }
 
     // 2. Logika Tambah ke Keranjang (Session)
-    public function addToCart(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+   public function addToCart(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+    
+    // 1. Ambil quantity dari URL, default 5 jika tidak ada
+    $qty = (int) $request->query('quantity', 5);
 
-        // Ambil data keranjang saat ini dari session
-        $cart = session()->get('cart', []);
+    // 2. Validasi Server Side (Jaga-jaga jika user otak-atik URL manual)
+   $request->validate([
+        'quantity' => ['required', 'integer', 'min:5', function ($attr, $val, $fail) {
+            if ($val % 5 !== 0) $fail('Jumlah wajib kelipatan 5.');
+        }]
+    ]);
+    $product = Product::findOrFail($id);
+    $qty = (int) $request->quantity;
 
-        // Jika produk sudah ada di keranjang, tambahkan jumlahnya
-        if(isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-        } else {
-            // Jika belum ada, masukkan data baru
-            $cart[$id] = [
-                "name" => $product->nama_produk,
-                "quantity" => 1,
-                "price" => $product->harga_mitra, // PENTING: Pakai Harga Mitra B2B
-                "image" => $product->gambar
-            ];
-        }
+    // 3. Logic Simpan ke Keranjang (Session)
+    $cart = session()->get('cart', []);
 
-        // Simpan kembali ke session
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('success', 'Produk masuk keranjang!');
+    if(isset($cart[$id])) {
+        // Jika produk sudah ada, tambahkan qty baru ke qty lama
+        $cart[$id]['quantity'] += $qty;
+    } else {
+        // Jika belum ada, buat baru
+        $cart[$id] = [
+            "name" => $product->nama_produk,
+            "quantity" => $qty,
+            "price" => $product->harga_mitra,
+            "image" => $product->gambar
+        ];
     }
+
+    session()->put('cart', $cart);
+
+    return redirect()->back()->with('success', 'Berhasil menambahkan ' . $qty . ' box ke keranjang!');
+}
 
     // 3. Tampilkan Halaman Keranjang
     public function cart()

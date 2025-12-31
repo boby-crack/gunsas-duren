@@ -3,25 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area Mitra - Gunsas Duren</title>
-
+    {{-- Token CSRF untuk keamanan form POST --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <title>Reseller Area - Gunsas Duren</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
+    
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
+        body { font-family: 'Poppins', sans-serif; background-color: #fffdf5; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Navbar Style (Disamakan dengan Landing Page) */
         .navbar { background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav-link { color: #333; font-weight: 500; }
-        .btn-warning { color: #fff; font-weight: 600; }
-        .btn-warning:hover { color: #fff; }
+        .btn-primary-custom { background-color: #f6a600; border: none; color: #fff; padding: 10px 25px; border-radius: 50px; font-weight: 600; transition: 0.3s; }
+        .btn-primary-custom:hover { background-color: #d99000; color: #fff; transform: translateY(-2px); }
 
-        /* Spacer agar konten tidak ketutup navbar fixed */
-        .main-content { margin-top: 80px; min-height: 80vh; }
+        /* Footer agar selalu di bawah */
+        footer { margin-top: auto; }
+        
+        /* Style Tambahan untuk Card Produk di dalam layout ini */
+        .card-product { transition: 0.3s; border: none; }
+        .card-product:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; }
     </style>
 </head>
 <body>
 
+    {{-- NAVBAR SERAGAM --}}
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ url('/') }}" style="color: #f6a600; font-size: 1.5rem;">
@@ -33,42 +44,63 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
                     <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('catalog.index') }}">Belanja Produk</a></li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle btn btn-light rounded-pill px-4" href="#" role="button" data-bs-toggle="dropdown">
-                            Halo, {{ Auth::user()->name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item active" href="{{ route('orders.index') }}">
-                                    <i class="fas fa-history me-2 text-muted"></i> Riwayat Pesanan
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
+                    
+                    {{-- Menu Khusus Reseller --}}
+                    @auth
+                        <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="{{ route('catalog.index') }}">Belanja Produk</a></li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle btn btn-light rounded-pill px-4" href="#" role="button" data-bs-toggle="dropdown">
+                                Halo, {{ Auth::user()->name }}
+                            </a>
+                            <ul class="dropdown-menu shadow border-0">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('orders.index') }}">
+                                        <i class="fas fa-history me-2 text-muted"></i> Riwayat Pesanan
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                        <i class="fas fa-user-cog me-2 text-muted"></i> Pengaturan Akun
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Masuk</a></li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="main-content container py-4">
+    {{-- KONTEN UTAMA (Diberi margin-top agar tidak ketutup navbar fixed) --}}
+    <main class="container py-5 mt-5">
         @yield('content')
-    </div>
+    </main>
 
-    <footer class="bg-white py-4 mt-5 border-top">
+    {{-- FOOTER SERAGAM --}}
+    <footer class="bg-dark text-white pt-4 pb-3 mt-5">
         <div class="container text-center">
-            <p class="mb-0 text-muted">&copy; {{ date('Y') }} Gunsas Duren. All rights reserved.</p>
+            <p class="small text-secondary mb-0">
+                © {{ date('Y') }} PT. Gunsas Jaya Berkah. Mitra Reseller Area.
+            </p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {{-- Script Tambahan (Jika ada di halaman anak) --}}
+    @yield('scripts')
+
 </body>
 </html>

@@ -113,10 +113,15 @@
                     </div>
                 </div>
 
-                <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required>
-                    <label class="form-check-label small text-muted" for="flexCheckDefault">
-                        Saya setuju dengan <a href="#" class="link-gold">Syarat & Ketentuan</a> Mitra.
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
+                    <label class="form-check-label small text-muted" for="terms">
+                        Saya setuju dengan 
+                        {{-- Link Pemicu Modal --}}
+                        <a href="#" class="text-warning fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalTerms">
+                            Syarat & Ketentuan
+                        </a> 
+                        Mitra.
                     </label>
                 </div>
 
@@ -130,6 +135,62 @@
             </form>
         </div>
     </div>
+
+    <div class="modal fade" id="modalTerms" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content border-0 shadow">
+            
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title fw-bold"><i class="fas fa-file-contract me-2"></i> Syarat & Ketentuan Mitra</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4 text-secondary">
+                <div class="text-center mb-4">
+                    <img src="{{ asset('assets/img/logo-gunsas.png') }}" height="50" alt="Logo">
+                    <p class="small text-muted mt-2">PT. Gunsas Jaya Berkah</p>
+                </div>
+
+                <h6 class="fw-bold text-dark">1. Pendahuluan</h6>
+                <p class="small">Selamat datang di program kemitraan Gunsas Duren. Dengan mendaftar sebagai Reseller, Anda menyetujui seluruh syarat dan ketentuan yang berlaku.</p>
+
+                <h6 class="fw-bold text-dark mt-3">2. Syarat Wajib</h6>
+                <ul class="small mb-0">
+                    <li>Wajib memiliki kartu identitas (KTP) yang sah.</li>
+                    <li><strong>Wajib memiliki Freezer/Kulkas</strong> yang memadai untuk menjaga kualitas produk beku.</li>
+                    <li>Bersedia memberikan data yang valid dan jujur saat verifikasi.</li>
+                </ul>
+
+                <h6 class="fw-bold text-dark mt-3">3. Pemesanan & Pembayaran</h6>
+                <ul class="small mb-0">
+                    <li>Minimal pembelian pertama (First Order) adalah <strong>5 Box</strong> (Varian boleh campur).</li>
+                    <li>Pembayaran dilakukan via transfer bank resmi perusahaan.</li>
+                    <li>Pesanan yang sudah dibayar tidak dapat dibatalkan.</li>
+                </ul>
+
+                <h6 class="fw-bold text-dark mt-3">4. Pengambilan Barang (Pickup)</h6>
+                <p class="small">Sistem kami saat ini adalah <strong>Ambil Sendiri (Self Pickup)</strong> di cabang terdekat. Barang dapat diambil H+3 setelah pembayaran dikonfirmasi oleh Admin.</p>
+                
+                <h6 class="fw-bold text-dark mt-3">5. Kebijakan Retur</h6>
+                <p class="small mb-0">Komplain kualitas (asam/basi) diterima maksimal 1x24 jam setelah barang diambil, wajib menyertakan bukti foto/video.</p>
+            </div>
+
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-warning text-white fw-bold rounded-pill px-4" onclick="document.getElementById('terms').checked = true; bootstrap.Modal.getInstance(document.getElementById('modalTerms')).hide();">
+                    Saya Setuju & Lanjut
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</body> </html>
 
 </body>
 </html>
