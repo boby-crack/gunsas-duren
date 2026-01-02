@@ -19,7 +19,7 @@ class CatalogController extends Controller
    public function addToCart(Request $request, $id)
 {
     $product = Product::findOrFail($id);
-    
+
     // 1. Ambil quantity dari URL, default 5 jika tidak ada
     $qty = (int) $request->query('quantity', 5);
 
@@ -69,6 +69,27 @@ class CatalogController extends Controller
                 session()->put('cart', $cart);
             }
             session()->flash('success', 'Produk dihapus dari keranjang');
+        }
+    }
+
+    public function updateCart(Request $request)
+    {
+        if($request->id && $request->quantity){
+
+            // VALIDASI BACKEND: Pastikan Minimal 5 dan Kelipatan 5
+            if ($request->quantity < 5 || $request->quantity % 5 != 0) {
+                session()->flash('error', 'Gagal update! Jumlah harus minimal 5 dan kelipatan 5.');
+                return response()->json(['status' => 'error'], 400); // Kirim error
+            }
+
+            $cart = session()->get('cart');
+
+            if(isset($cart[$request->id])) {
+                $cart[$request->id]['quantity'] = $request->quantity;
+                session()->put('cart', $cart);
+
+                session()->flash('success', 'Keranjang berhasil diperbarui');
+            }
         }
     }
 }

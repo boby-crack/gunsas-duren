@@ -3,36 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- Token CSRF untuk keamanan form POST --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>Reseller Area - Gunsas Duren</title>
-    
+
+    {{-- CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
-    
+
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #fffdf5; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        /* Navbar Style (Disamakan dengan Landing Page) */
+
+        /* Navbar Style */
         .navbar { background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav-link { color: #333; font-weight: 500; }
         .btn-primary-custom { background-color: #f6a600; border: none; color: #fff; padding: 10px 25px; border-radius: 50px; font-weight: 600; transition: 0.3s; }
         .btn-primary-custom:hover { background-color: #d99000; color: #fff; transform: translateY(-2px); }
 
-        /* Footer agar selalu di bawah */
+        /* Footer */
         footer { margin-top: auto; }
-        
-        /* Style Tambahan untuk Card Produk di dalam layout ini */
-        .card-product { transition: 0.3s; border: none; }
-        .card-product:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; }
+
+        /* Card & Badge */
+        .product-card { border: none; border-radius: 15px; background: #fff; transition: 0.3s; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .product-img { height: 220px; object-fit: cover; width: 100%; }
+        .badge-reseller { background: #ffeeba; color: #856404; font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; }
     </style>
 </head>
 <body>
 
-    {{-- NAVBAR SERAGAM --}}
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ url('/') }}" style="color: #f6a600; font-size: 1.5rem;">
@@ -44,62 +45,94 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
                     <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Beranda</a></li>
-                    
-                    {{-- Menu Khusus Reseller --}}
-                    @auth
-                        <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="{{ route('catalog.index') }}">Belanja Produk</a></li>
-                        
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle btn btn-light rounded-pill px-4" href="#" role="button" data-bs-toggle="dropdown">
-                                Halo, {{ Auth::user()->name }}
-                            </a>
-                            <ul class="dropdown-menu shadow border-0">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                        <i class="fas fa-history me-2 text-muted"></i> Riwayat Pesanan
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                        <i class="fas fa-user-cog me-2 text-muted"></i> Pengaturan Akun
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger">
-                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Masuk</a></li>
-                    @endauth
+
+                    {{-- Menu Produk --}}
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('catalog.index') ? 'active fw-bold text-warning' : '' }}" href="{{ route('catalog.index') }}">
+                            Produk
+                        </a>
+                    </li>
+
+                    @if (Route::has('login'))
+                        @auth
+                            {{-- ========================================================= --}}
+                            {{-- 1. IKON KERANJANG BELANJA (WAJIB ADA UNTUK CHECKOUT) --}}
+                            {{-- ========================================================= --}}
+                            <li class="nav-item me-2">
+                                <a href="{{ route('cart.index') }}" class="position-relative btn btn-light rounded-circle shadow-sm text-warning" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-shopping-cart"></i>
+
+                                    {{-- Badge Hitungan Barang (Muncul jika ada isi) --}}
+                                    @if(session('cart'))
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light">
+                                            {{ count(session('cart')) }}
+                                        </span>
+                                    @endif
+                                </a>
+                            </li>
+
+                            {{-- 2. Dropdown User --}}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle btn btn-light rounded-pill px-4" href="#" role="button" data-bs-toggle="dropdown">
+                                    Halo, {{ Auth::user()->name }}
+                                </a>
+                                <ul class="dropdown-menu shadow border-0">
+
+                                    @if(Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
+                                        <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Dashboard Admin</a></li>
+                                    @else
+                                        @if(Auth::user()->status_akun == 'active')
+                                            <li><a class="dropdown-item" href="{{ route('orders.index') }}">Riwayat Pesanan</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('catalog.index') }}">Belanja Produk</a></li>
+                                        @elseif(Auth::user()->status_akun == 'pending')
+                                            <li><a class="dropdown-item" href="{{ route('profile.complete.create') }}">Lengkapi Profil</a></li>
+                                        @elseif(Auth::user()->status_akun == 'waiting_approval')
+                                            <li><a class="dropdown-item" href="{{ route('verification.notice') }}">Cek Status</a></li>
+                                        @endif
+                                    @endif
+
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Pengaturan Akun</a></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item text-danger">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @else
+                            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Masuk</a></li>
+                            <li class="nav-item"><a href="{{ route('register') }}" class="btn btn-primary-custom">Daftar Reseller</a></li>
+                        @endauth
+                    @endif
                 </ul>
             </div>
         </div>
     </nav>
 
-    {{-- KONTEN UTAMA (Diberi margin-top agar tidak ketutup navbar fixed) --}}
-    <main class="container py-5 mt-5">
+    <main style="margin-top: 100px;">
         @yield('content')
     </main>
 
-    {{-- FOOTER SERAGAM --}}
-    <footer class="bg-dark text-white pt-4 pb-3 mt-5">
+    <footer class="bg-dark text-white pt-5 pb-3 mt-5">
         <div class="container text-center">
-            <p class="small text-secondary mb-0">
-                © {{ date('Y') }} PT. Gunsas Jaya Berkah. Mitra Reseller Area.
-            </p>
+            <p class="small text-secondary">© {{ date('Y') }} PT. Gunsas Jaya Berkah. Mitra Reseller Area.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    {{-- Script Tambahan (Jika ada di halaman anak) --}}
+    <script>
+        function updateQty(btn, amount) {
+            const form = btn.closest('form');
+            const input = form.querySelector('input[name="quantity"]');
+            let currentVal = parseInt(input.value);
+            let newVal = currentVal + amount;
+            if (newVal >= 5) input.value = newVal;
+        }
+    </script>
+    {{-- INI DIA YANG HILANG! --}}
+    {{-- Tempat untuk menyuntikkan script dari halaman anak (seperti cart/index) --}}
     @yield('scripts')
 
 </body>

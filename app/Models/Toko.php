@@ -13,6 +13,7 @@ class Toko extends Model
         'nama_toko',
         'alamat_lengkap',
         'kota',
+        'link_maps',
     ];
 
     // Relasi: Satu Toko bisa jadi tempat ambil banyak Order
