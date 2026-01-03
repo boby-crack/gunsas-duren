@@ -1,74 +1,212 @@
 @extends('layouts.reseller')
 
+@section('title', 'Katalog Produk')
+
 @section('content')
-<div class="container pb-5">
 
-    {{-- Header Judul Halaman --}}
-    <div class="text-center mb-5">
-        <span class="badge-reseller mb-2">Area Reseller</span>
-        <h2 class="fw-bold">Belanja Stok Toko</h2>
-        <p class="text-muted">Pilih produk berkualitas untuk pelanggan setia Anda</p>
-    </div>
-
-    {{-- Pesan Sukses --}}
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show fixed-alert shadow-lg" role="alert">
+        <div class="d-flex align-items-center">
+            <div class="fs-3 me-3 text-success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div>
+                <h6 class="alert-heading fw-bold mb-0">Berhasil!</h6>
+                <small>{{ session('success') }}</small>
+            </div>
         </div>
-    @endif
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
-    {{-- Grid Produk --}}
-    <div class="row g-4">
-        @foreach($products as $product)
-        <div class="col-md-4 col-lg-3">
-            <div class="product-card h-100">
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show fixed-alert shadow-lg" role="alert">
+        <div class="d-flex align-items-center">
+            <div class="fs-3 me-3 text-danger">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div>
+                <h6 class="alert-heading fw-bold mb-0">Gagal!</h6>
+                <small>{{ session('error') }}</small>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
-                {{-- Gambar --}}
-                <div style="height: 220px; overflow: hidden; background: #f8f9fa;" class="d-flex align-items-center justify-content-center">
-                    @if($product->gambar)
-                        <img src="{{ asset('storage/' . $product->gambar) }}" class="product-img" alt="{{ $product->nama_produk }}">
-                    @else
-                        <i class="fas fa-image fa-3x text-muted"></i>
-                    @endif
-                </div>
+<style>
+    /* CSS Khusus Alert Melayang */
+    .fixed-alert {
+        position: fixed;
+        top: 100px; /* Muncul di bawah navbar */
+        right: 20px;
+        z-index: 9999; /* Pastikan di atas elemen lain */
+        min-width: 300px;
+        max-width: 400px;
+        border-radius: 12px;
+        border: none;
+        background: white;
+        border-left: 5px solid #198754; /* Garis hijau di kiri */
+        animation: slideInRight 0.5s ease-out;
+    }
+    
+    /* Animasi Masuk */
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+{{-- HEADER HALAMAN --}}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5">
+    <div>
+        <span class="text-uppercase fw-bold ls-1" style="color: var(--gunsas-gold);">Area Mitra</span>
+        <h2 class="fw-bold mt-1 display-6 text-dark">Belanja Stok</h2>
+        <p class="text-muted mb-0">Pilih produk berkualitas untuk pelanggan setia Anda.</p>
+    </div>
+    
+    {{-- Filter Kategori (Opsional Visual) --}}
+</div>
 
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-2">{{ $product->nama_produk }}</h5>
-                    <p class="text-muted small mb-3">{{ Str::limit($product->deskripsi, 50) }}</p>
+{{-- GRID PRODUK --}}
+<div class="row g-4">
+    @foreach($products as $product)
+    <div class="col-lg-3 col-md-6">
+        <div class="product-card h-100 d-flex flex-column">
+            
+            {{-- GAMBAR PRODUK --}}
+            <div class="product-img-wrap">
+                @if($product->gambar)
+                    <img src="{{ asset('storage/' . $product->gambar) }}" class="product-img" alt="{{ $product->nama_produk }}">
+                @else
+                    <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
+                        <i class="fas fa-image fa-2x"></i>
+                    </div>
+                @endif
+            </div>
+            
+            {{-- INFORMASI PRODUK --}}
+            <div class="p-4 d-flex flex-column flex-grow-1">
+                <h5 class="fw-bold mb-2 text-dark">{{ $product->nama_produk }}</h5>
+                <p class="text-muted small mb-3 flex-grow-1 lh-sm">{{ Str::limit($product->deskripsi, 50) }}</p>
+                
+                <div class="mt-auto">
+                    {{-- HARGA --}}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <small class="text-muted fw-bold">Harga Mitra</small>
+                        <h5 class="fw-bold mb-0" style="color: var(--gunsas-green);">
+                            Rp {{ number_format($product->harga_mitra, 0, ',', '.') }}
+                        </h5>
+                    </div>
+                    
+                    {{-- FORM ORDER --}}
+                    <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
+                        @csrf
+                        
+                        {{-- Input Qty dengan Tombol +/- --}}
+                        <div class="d-flex align-items-center justify-content-between mb-3 bg-light rounded-3 p-1 border">
+                            <button type="button" class="btn btn-sm text-muted" onclick="updateQty(this, -5)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            
+                            <div class="d-flex align-items-center">
+                                <span class="small text-muted me-2">Box:</span>
+                                <input type="number" name="quantity" class="form-control border-0 bg-transparent text-center fw-bold p-0" 
+                                       value="5" min="5" style="width: 40px;" readonly>
+                            </div>
 
-                    <h5 class="text-warning fw-bold mb-3">Rp {{ number_format($product->harga_mitra, 0, ',', '.') }}</h5>
+                            <button type="button" class="btn btn-sm text-dark" onclick="updateQty(this, 5)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
 
-                    {{-- FORM BELI (Minimal 5) --}}
-                   {{-- FORM BELANJA (Alur E-Commerce) --}}
-                            <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
-                                @csrf
-
-                                {{-- Input Jumlah (Tetap Min. 5 sesuai aturan bisnis, tapi tampilan belanja) --}}
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <span class="small text-muted fw-bold">Jumlah Box:</span>
-                                    <div class="d-flex align-items-center border rounded px-2 py-1 bg-light">
-                                        <button type="button" class="btn btn-sm text-secondary p-0" onclick="updateQty(this, -5)">
-                                            <i class="fas fa-minus small"></i>
-                                        </button>
-                                        <input type="number" name="quantity" class="form-control border-0 text-center fw-bold bg-transparent p-0 mx-1"
-                                            value="5" min="5" style="width: 40px; font-size: 1rem;" readonly>
-                                        <button type="button" class="btn btn-sm text-secondary p-0" onclick="updateQty(this, 5)">
-                                            <i class="fas fa-plus small"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {{-- Tombol "Tambah ke Keranjang" (Shopping Style) --}}
-                                <button type="submit" class="btn btn-primary-custom w-100 rounded-pill shadow-sm">
-                                    <i class="fas fa-cart-plus me-2"></i> Tambah ke Keranjang
-                                </button>
-                            </form>
-
+                        {{-- Tombol Submit --}}
+                        <button type="submit" class="btn-add-cart">
+                            <i class="fas fa-cart-plus me-2"></i> Masukkan Keranjang
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-        @endforeach
     </div>
+    @endforeach
 </div>
+
+{{-- CSS KHUSUS KATALOG (Agar Tampilan Konsisten dengan Landing Page) --}}
+<style>
+    /* Styling Kartu Produk */
+    .product-card {
+        background: white;
+        border: 1px solid var(--border-soft);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        border-color: var(--gunsas-green);
+    }
+
+    /* Gambar Produk */
+    .product-img-wrap {
+        height: 220px;
+        overflow: hidden;
+        position: relative;
+        background: #FAFAFA;
+    }
+    .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.5s;
+    }
+    .product-card:hover .product-img {
+        transform: scale(1.05);
+    }
+
+    /* Badge Stok */
+    .badge-kategori {
+        position: absolute; top: 15px; left: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--gunsas-dark);
+        font-weight: 700; font-size: 0.75rem;
+        padding: 6px 14px; border-radius: 30px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Tombol Add to Cart Premium */
+    .btn-add-cart {
+        width: 100%;
+        background-color: var(--gunsas-dark);
+        color: var(--gunsas-gold);
+        font-weight: 700;
+        border: none;
+        padding: 12px;
+        border-radius: 12px;
+        transition: 0.3s;
+    }
+    .btn-add-cart:hover {
+        background-color: var(--gunsas-gold);
+        color: var(--gunsas-dark);
+        box-shadow: 0 5px 15px rgba(251, 192, 45, 0.3);
+    }
+</style>
+
+{{-- SCRIPT UPDATE QUANTITY (Kelipatan 5) --}}
+@section('scripts')
+<script>
+    function updateQty(btn, amount) {
+        const form = btn.closest('form');
+        const input = form.querySelector('input[name="quantity"]');
+        let currentVal = parseInt(input.value);
+        let newVal = currentVal + amount;
+        
+        // Minimal order 5 box
+        if (newVal >= 5) {
+            input.value = newVal;
+        }
+    }
+</script>
+@endsection
+
 @endsection

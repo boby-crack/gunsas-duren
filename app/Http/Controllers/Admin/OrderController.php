@@ -37,20 +37,31 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
-    // 3. Update Status Pesanan (PENTING)
-    public function update(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
+    // Update pada method update di OrderController
+      public function update(Request $request, $id)
+            {
+                $order = Order::findOrFail($id);
 
-        // Validasi input status
-        $request->validate([
-            'status' => 'required|in:menunggu_bayar,sudah_bayar,siap_diambil,selesai,batal'
-        ]);
+    // 1. CEK JIKA STATUS SUDAH FINAL
+            if (in_array($order->status, ['selesai', 'batal'])) {
+                return redirect()->back()->with('error', 'Pesanan yang sudah selesai atau batal tidak dapat diubah lagi.');
+            }
 
-        $order->update([
-            'status' => $request->status
-        ]);
+            $request->validate([
+                'status' => 'required|in:sudah_bayar,siap_diambil,selesai,batal'
+            ]);
 
-        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
-    }
+            // 2. LOGIKA TAMBAHAN UNTUK STAFF
+            if (auth()->user()->role == 'staff') {
+                if ($order->status !== 'siap_diambil' || $request->status !== 'selesai') {
+                    return redirect()->back()->with('error', 'Staff hanya boleh menyelesaikan pesanan yang berstatus Siap Diambil.');
+                }
+            }
+
+            $order->update([
+                'status' => $request->status
+            ]);
+
+            return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
+        }
 }

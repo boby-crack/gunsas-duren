@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Reseller;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Toko;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -29,5 +31,29 @@ class OrderController extends Controller
                       ->findOrFail($id);
 
         return view('reseller.orders.show', compact('order'));
+    }
+ public function downloadInvoice($id)
+    {
+        // 1. Ambil Data
+        $order = Order::with(['orderItems.product', 'toko'])
+                      ->where('id', $id)
+                      ->where('user_id', auth()->id())
+                      ->firstOrFail();
+
+        // 2. Load PDF
+        $pdf = Pdf::loadView('cetak', compact('order'));
+
+        // --- SOLUSI AJAIB (Tambahkan Blok Ini) ---
+        // Membersihkan output buffer agar file PDF murni tidak tercampur sampah lain
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+        // ------------------------------------------
+
+        // 3. Kembalikan ke Download (Jangan Stream lagi)
+        // Pastikan nama file tidak mengandung karakter aneh seperti garis miring '/'
+        $namaFile = 'Invoice-' . str_replace('/', '-', $order->kode_invoice) . '.pdf';
+        
+        return $pdf->download($namaFile);
     }
 }

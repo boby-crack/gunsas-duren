@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.tokos.store') }}" method="POST">
+            <form action="{{ route('admin.tokos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Nama Cabang --}}
@@ -65,6 +65,15 @@
                            placeholder="https://maps.app.goo.gl/...">
                     <small class="text-muted">Copy link dari tombol 'Share' di Google Maps agar akurat.</small>
                     @error('link_maps')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Foto Outlet</label>
+                    <input type="file" name="gambar" class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
+                    <small class="text-muted">Format: JPG, PNG. Maksimal 2MB.</small>
+                    @error('gambar')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

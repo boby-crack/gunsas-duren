@@ -22,6 +22,7 @@
                 <strong>{{ $order->toko->nama_toko }}</strong>.
             </p>
 
+
             <button id="pay-button" class="btn btn-primary btn-lg w-100 rounded-pill shadow">
                 <i class="fa-solid fa-credit-card me-2"></i> BAYAR SEKARANG
             </button>

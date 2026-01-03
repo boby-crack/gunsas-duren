@@ -33,7 +33,7 @@
 
     <div class="d-flex">
         <div class="sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 250px;">
-            <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
               <img src="{{ asset('assets/img/logo-gunsas.png') }}" alt="Gunsas Duren" height="50">
                 <span class="ms-4 fs-4">Gunsas Admin</span>
             </a>

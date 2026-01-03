@@ -72,24 +72,28 @@ class CatalogController extends Controller
         }
     }
 
-    public function updateCart(Request $request)
+   public function updateCart(Request $request)
     {
         if($request->id && $request->quantity){
-
-            // VALIDASI BACKEND: Pastikan Minimal 5 dan Kelipatan 5
+            
+            // Validasi Backend
             if ($request->quantity < 5 || $request->quantity % 5 != 0) {
-                session()->flash('error', 'Gagal update! Jumlah harus minimal 5 dan kelipatan 5.');
-                return response()->json(['status' => 'error'], 400); // Kirim error
+                // Jika input tidak valid, jangan update session
+                session()->flash('error', 'Jumlah harus kelipatan 5.');
+                return response()->json(['status' => 'error'], 400);
             }
 
             $cart = session()->get('cart');
-
+            
             if(isset($cart[$request->id])) {
                 $cart[$request->id]['quantity'] = $request->quantity;
                 session()->put('cart', $cart);
-
+                
                 session()->flash('success', 'Keranjang berhasil diperbarui');
+                return response()->json(['status' => 'success']);
             }
         }
+        
+        return response()->json(['status' => 'failed'], 404);
     }
 }

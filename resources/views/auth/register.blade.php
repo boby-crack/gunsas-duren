@@ -147,32 +147,63 @@
 
             <div class="modal-body p-4 text-secondary">
                 <div class="text-center mb-4">
-                    <img src="{{ asset('assets/img/logo-gunsas.png') }}" height="50" alt="Logo">
-                    <p class="small text-muted mt-2">PT. Gunsas Jaya Berkah</p>
+                    <img src="{{ asset('assets/img/logo-gunsas.png') }}" alt="Logo" width="80" class="mb-2">
+                    <h5 class="fw-bold">PT. Gunsas Jaya Berkah</h5>
+                    <p class="text-muted small">Mitra Resmi Reseller & Agen Durian</p>
                 </div>
 
-                <h6 class="fw-bold text-dark">1. Pendahuluan</h6>
-                <p class="small">Selamat datang di program kemitraan Gunsas Duren. Dengan mendaftar sebagai Reseller, Anda menyetujui seluruh syarat dan ketentuan yang berlaku.</p>
+                <div class="accordion" id="accordionSyarat">
+    
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="fas fa-user-check text-warning me-2"></i>1. Syarat Menjadi Mitra</h6>
+                        <ul class="small text-secondary ps-4 mb-0" style="list-style-type: disc;">
+                            <li>Wajib mengisi data diri dengan benar (KTP & No. WhatsApp aktif).</li>
+                            <li><strong>Wajib memiliki Freezer/Kulkas</strong>. Produk kami adalah Durian Beku (Frozen) tanpa pengawet yang wajib disimpan di suhu -18°C. Kami tidak bertanggung jawab atas kerusakan akibat kelalaian penyimpanan.</li>
+                            <li>Akun baru akan melalui proses verifikasi oleh Admin sebelum bisa digunakan.</li>
+                        </ul>
+                    </div>
 
-                <h6 class="fw-bold text-dark mt-3">2. Syarat Wajib</h6>
-                <ul class="small mb-0">
-                    <li>Wajib memiliki kartu identitas (KTP) yang sah.</li>
-                    <li><strong>Wajib memiliki Freezer/Kulkas</strong> yang memadai untuk menjaga kualitas produk beku.</li>
-                    <li>Bersedia memberikan data yang valid dan jujur saat verifikasi.</li>
-                </ul>
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="fas fa-box-open text-warning me-2"></i>2. Ketentuan Pemesanan (Order)</h6>
+                        <ul class="small text-secondary ps-4 mb-0" style="list-style-type: disc;">
+                            <li>Pemesanan dilakukan mandiri melalui website.</li>
+                            <li><strong>Aturan Jumlah Order:</strong> Sesuai kebijakan grosir, pembelian <strong>wajib kelipatan 5 Box per item</strong> (Contoh: 5, 10, 15, dst).</li>
+                            <li>Harga di website adalah harga final khusus Reseller.</li>
+                        </ul>
+                    </div>
 
-                <h6 class="fw-bold text-dark mt-3">3. Pemesanan & Pembayaran</h6>
-                <ul class="small mb-0">
-                    <li>Minimal pembelian pertama (First Order) adalah <strong>5 Box</strong> (Varian boleh campur).</li>
-                    <li>Pembayaran dilakukan via transfer bank resmi perusahaan.</li>
-                    <li>Pesanan yang sudah dibayar tidak dapat dibatalkan.</li>
-                </ul>
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="fas fa-money-bill-wave text-warning me-2"></i>3. Pembayaran</h6>
+                        <ul class="small text-secondary ps-4 mb-0" style="list-style-type: disc;">
+                            <li>Pembayaran <strong>Cashless (Non-Tunai)</strong> via Transfer Bank/E-Wallet. Staff toko tidak menerima uang tunai.</li>
+                            <li>Pesanan diproses setelah lunas (Status: <em>Paid</em>). Batas pembayaran 1x24 jam sebelum expired.</li>
+                        </ul>
+                    </div>
 
-                <h6 class="fw-bold text-dark mt-3">4. Pengambilan Barang (Pickup)</h6>
-                <p class="small">Sistem kami saat ini adalah <strong>Ambil Sendiri (Self Pickup)</strong> di cabang terdekat. Barang dapat diambil H+3 setelah pembayaran dikonfirmasi oleh Admin.</p>
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="fas fa-store text-warning me-2"></i>4. Sistem Pickup & Cek Fisik</h6>
+                        <ul class="small text-secondary ps-4 mb-0" style="list-style-type: disc;">
+                            <li>Pengambilan barang dilakukan H+3 setelah pembayaran lunas di outlet yang dipilih.</li>
+                            <li><strong>Cek Fisik Wajib:</strong> Saat pengambilan, Mitra/Kurir WAJIB mengecek kondisi barang (Pastikan beku & kemasan segel) bersama Staff Toko.</li>
+                            <li>Jika barang sudah dibawa keluar dari outlet, maka kerusakan fisik (cair/lumer/penyok) menjadi tanggung jawab Mitra sepenuhnya.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="fas fa-sync-alt text-warning me-2"></i>5. Garansi Rasa (Retur)</h6>
+                        <ul class="small text-secondary ps-4 mb-0" style="list-style-type: disc;">
+                            <li>Kami memberikan garansi khusus <strong>Rasa Asam/Basi</strong> maksimal <strong>1x24 Jam</strong> setelah barang diambil.</li>
+                            <li><strong>Syarat Klaim:</strong> Barang yang dikomplain TIDAK BOLEH DIBUANG/HABIS. Wajib disisakan minimal 80%, difoto, dan dikembalikan ke outlet untuk pengecekan tim Kitchen (QC).</li>
+                            <li>Jika terbukti kesalahan produksi (Basi), kami ganti produk baru 100%. Jika kesalahan penyimpanan Mitra (Freezer kurang dingin/mati), klaim ditolak.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning small border-0 mt-4 mb-0">
+                    <i class="fas fa-info-circle me-1"></i> Dengan menekan tombol <strong>"Saya Setuju"</strong>, Anda menyetujui prosedur pengecekan barang dan kebijakan garansi di atas.
+                </div>
+
                 
-                <h6 class="fw-bold text-dark mt-3">5. Kebijakan Retur</h6>
-                <p class="small mb-0">Komplain kualitas (asam/basi) diterima maksimal 1x24 jam setelah barang diambil, wajib menyertakan bukti foto/video.</p>
             </div>
 
             <div class="modal-footer bg-light">

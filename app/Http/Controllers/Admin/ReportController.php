@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Exports\LaporanPenjualanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -44,4 +46,16 @@ class ReportController extends Controller
 
         return view('admin.reports.print', compact('orders', 'startDate', 'endDate', 'totalRevenue'));
     }
+
+   // File: app/Http/Controllers/Admin/LaporanController.php
+
+public function exportExcel(Request $request)
+{
+    // Mengambil parameter tanggal dari form filter di View Laporan
+    $dari = $request->dari_tanggal; 
+    $sampai = $request->sampai_tanggal;
+
+    // Menjalankan proses download menggunakan class Export yang telah dibuat
+    return Excel::download(new LaporanPenjualanExport($dari, $sampai), 'Laporan-Penjualan-Gunsas.xlsx');
+}
 }

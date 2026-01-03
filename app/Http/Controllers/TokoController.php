@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Toko; // Pastikan Model Toko ada (jika belum, buat: php artisan make:model Toko)
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class TokoController extends Controller
 {
@@ -22,27 +25,31 @@ class TokoController extends Controller
 
     // 3. Simpan Data Toko
    public function store(Request $request)
-    {
-        // 1. Validasi Input
-        $request->validate([
-            'nama_toko' => 'required|string|max:255',
-            'alamat_lengkap'    => 'required|string',
-            'kota'      => 'required|string|max:100',
-            // Field baru: Boleh kosong (nullable), tapi jika diisi harus berupa URL
-            'link_maps' => 'nullable|url',
-        ]);
+{
+    $request->validate([
+        'nama_toko'      => 'required|string|max:255',
+        'alamat_lengkap'         => 'required|string',
+        'kota'           => 'required|string|max:100',
+        'link_maps'      => 'nullable|url',
+        'gambar'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi Gambar (Max 2MB)
+    ]);
 
-        // 2. Simpan ke Database
-        Toko::create([
-            'nama_toko' => $request->nama_toko,
-            'alamat_lengkap'    => $request->alamat_lengkap,
-            'kota'      => $request->kota,
-            'link_maps' => $request->link_maps, // <--- Simpan link maps
-        ]);
-
-        return redirect()->route('admin.tokos.index')
-            ->with('success', 'Cabang toko berhasil ditambahkan');
+    $pathGambar = null;
+    if ($request->hasFile('gambar')) {
+        // Simpan ke folder 'public/tokos'
+        $pathGambar = $request->file('gambar')->store('tokos', 'public');
     }
+
+    Toko::create([
+        'nama_toko'      => $request->nama_toko,
+        'alamat_lengkap' => $request->alamat_lengkap,
+        'kota'           => $request->kota,
+        'link_maps'      => $request->link_maps,
+        'gambar'         => $pathGambar, // Simpan path gambar
+    ]);
+
+    return redirect()->route('admin.tokos.index')->with('success', 'Cabang toko berhasil ditambahkan');
+}
 
     // ... method index & store sebelumnya ...
 
@@ -53,28 +60,37 @@ class TokoController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        // 1. Validasi Input
-        $request->validate([
-            'nama_toko' => 'required|string|max:255',
-            'alamat_lengkap'    => 'required|string',
-            'kota'      => 'required|string|max:100',
-            'link_maps' => 'nullable|url', // <--- Validasi field baru
-        ]);
+        {
+            $request->validate([
+                'nama_toko' => 'required|string|max:255',
+                'alamat_lengkap'    => 'required|string',
+                'kota'      => 'required|string|max:100',
+                'link_maps' => 'nullable|url',
+                'gambar'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
 
-        $toko = Toko::findOrFail($id);
+            $toko = Toko::findOrFail($id);
+            $data = [
+                'nama_toko'      => $request->nama_toko,
+                'alamat_lengkap' => $request->alamat_lengkap,
+                'kota'           => $request->kota,
+                'link_maps'      => $request->link_maps,
+            ];
 
-        // 2. Update Data
-        $toko->update([
-            'nama_toko' => $request->nama_toko,
-            'alamat_lengkap'    => $request->alamat_lengkap,
-            'kota'      => $request->kota,
-            'link_maps' => $request->link_maps, // <--- Update link maps
-        ]);
+            // Cek apakah user upload gambar baru?
+            if ($request->hasFile('gambar')) {
+                // Hapus gambar lama jika ada
+                if ($toko->gambar && Storage::disk('public')->exists($toko->gambar)) {
+                    Storage::disk('public')->delete($toko->gambar);
+                }
+                // Simpan gambar baru
+                $data['gambar'] = $request->file('gambar')->store('tokos', 'public');
+            }
 
-        return redirect()->route('admin.tokos.index')
-            ->with('success', 'Data cabang berhasil diperbarui');
-    }
+            $toko->update($data);
+
+            return redirect()->route('admin.tokos.index')->with('success', 'Data cabang berhasil diperbarui');
+        }
 
     public function destroy($id)
 {

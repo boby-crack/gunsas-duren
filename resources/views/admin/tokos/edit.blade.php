@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.tokos.update', $toko->id) }}" method="POST">
+            <form action="{{ route('admin.tokos.update', $toko->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') {{-- PENTING: Untuk update data --}}
 
@@ -66,6 +66,23 @@
                            value="{{ old('link_maps', $toko->link_maps) }}">
                     <small class="text-muted">Pastikan diawali dengan <b>http://</b> atau <b>https://</b>. Copy link dari tombol 'Share' di Google Maps.</small>
                     @error('link_maps')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Foto Outlet</label>
+                    
+                    {{-- Pratinjau Gambar Lama --}}
+                    @if($toko->gambar)
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/' . $toko->gambar) }}" alt="Foto Lama" class="img-thumbnail" style="height: 150px;">
+                        </div>
+                    @endif
+
+                    <input type="file" name="gambar" class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
+                    <small class="text-muted">Biarkan kosong jika tidak ingin mengubah foto.</small>
+                    @error('gambar')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

@@ -7,15 +7,15 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <form action="{{ route('admin.reports.index') }}" method="GET" class="row g-3 align-items-end">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label fw-bold">Dari Tanggal</label>
                     <input type="date" name="start_date" class="form-control" value="{{ $startDate }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label fw-bold">Sampai Tanggal</label>
                     <input type="date" name="end_date" class="form-control" value="{{ $endDate }}">
                 </div>
-                <div class="col-md-4 d-flex gap-2">
+                <div class="col-md-6 d-flex gap-2">
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fa-solid fa-filter me-1"></i> Filter
                     </button>
@@ -23,6 +23,9 @@
                        target="_blank" class="btn btn-danger w-100">
                         <i class="fa-solid fa-print me-1"></i> Cetak PDF
                     </a>
+                    <a href="{{ route('admin.reports.excel', request()->all()) }}" class="btn btn-success  w-100">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
                 </div>
             </form>
         </div>

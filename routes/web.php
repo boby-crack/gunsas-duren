@@ -117,6 +117,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Riwayat Pesanan (SEKARANG SUDAH AMAN DI DALAM SINI)
         Route::get('/riwayat-pesanan', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/riwayat-pesanan/{id}', [OrderController::class, 'show'])->name('orders.show');
+        Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
     });
 
 
@@ -145,6 +146,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Laporan
         Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/laporan/cetak', [ReportController::class, 'print'])->name('reports.print');
+        Route::get('/admin/laporan/excel', [ReportController::class, 'exportExcel'])->name('reports.excel');
 
 
     });
