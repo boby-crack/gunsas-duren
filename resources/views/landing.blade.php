@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gunsas Duren - Rajanya Duren</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
             /* PALET WARNA GUNSAS (Premium) */
-            --gunsas-gold: #FBC02D;        
-            --gunsas-gold-light: #FFF9C4;  
-            --gunsas-green: #388E3C;       
-            --gunsas-dark: #1B1B1B;        
-            --text-grey: #546E7A;          
+            --gunsas-gold: #FBC02D;
+            --gunsas-gold-light: #FFF9C4;
+            --gunsas-green: #388E3C;
+            --gunsas-dark: #1B1B1B;
+            --text-grey: #546E7A;
             --bg-white: #FFFFFF;
             --border-soft: #ECEFF1;
         }
@@ -41,9 +41,9 @@
         /* --- DEKORASI BACKGROUND --- */
         section {
             position: relative;
-            overflow: hidden; 
+            overflow: hidden;
         }
-        
+
         .deco-img {
             position: absolute;
             z-index: 0;
@@ -59,7 +59,7 @@
             width: 350px;
             transform: rotate(15deg);
         }
-        
+
         .deco-bottom-left {
             bottom: -50px;
             left: -80px;
@@ -134,7 +134,7 @@
         }
 
         /* Saat di-hover atau dropdown dibuka, teks jadi warna emas atau putih */
-        .btn-user-dropdown:hover, 
+        .btn-user-dropdown:hover,
         .show > .btn-user-dropdown {
             background: var(--gunsas-dark);
             color: var(--gunsas-gold) !important;
@@ -465,7 +465,7 @@
         border-left: 5px solid #198754; /* Garis hijau di kiri */
         animation: slideInRight 0.5s ease-out;
     }
-    
+
     /* Animasi Masuk */
     @keyframes slideInRight {
         from { transform: translateX(100%); opacity: 0; }
@@ -491,7 +491,7 @@
                         <li class="nav-item ms-3">
                             <a href="{{ route('cart.index') }}" class="position-relative btn-icon-nav" title="Lihat Keranjang">
                                 <i class="fas fa-shopping-cart fs-5"></i>
-                                
+
                                 {{-- PERBAIKAN: Hitung jumlah array dari session 'cart' --}}
                                 @php
                                     $cart = session('cart', []); // Ambil session, default array kosong
@@ -506,7 +506,7 @@
                             </a>
                         </li>
                     @endif
-                                        
+
                     @if (Route::has('login'))
                         @auth
                             <li class="nav-item dropdown ms-4">
@@ -543,24 +543,23 @@
     </nav>
 
     <section class="hero-section">
-        <img src="{{ asset('assets/img/pancake.png') }}" class="deco-img deco-top-right" alt="Hiasan Pancake">
-        
+
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6" data-aos="fade-right">
                     <span class="hero-badge">
                         <i class="fas fa-crown text-warning me-2"></i> Rajanya Duren
                     </span>
-                    
+
                     <h1 class="hero-title">
                         Taste The <span class="text-highlight">Authentic</span> <br>
                         Of Durian.
                     </h1>
-                    
+
                     <p class="hero-desc">
                         Gunsas Duren menyajikan durian premium dan produk olahan inovatif. Dari Puncak Bogor untuk Indonesia, dengan garansi rasa dan kualitas terbaik.
                     </p>
-                    
+
                     <div class="d-flex align-items-center gap-3 mb-5">
                         <a href="{{ route('register') }}" class="btn-cta-primary">
                             Gabung Mitra
@@ -580,7 +579,7 @@
                                 <small class="text-muted fw-bold" style="font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;">Google Rating</small>
                             </div>
                         </div>
-                        
+
                         <div style="width: 1px; height: 35px; background-color: #E0E0E0;"></div>
 
                         <div class="d-flex align-items-center gap-3">
@@ -598,10 +597,10 @@
                 <div class="col-lg-6 mt-5 mt-lg-0 text-center" data-aos="fade-left">
                     <div style="position: relative; display: inline-block;">
                         <div style="position: absolute; width: 350px; height: 350px; background: var(--gunsas-gold-light); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1;"></div>
-                        
-                        <img src="{{ asset('assets/img/gambar-hero.webp') }}" 
-                             class="img-fluid" 
-                             style="max-height: 600px; filter: drop-shadow(0 25px 50px rgba(0,0,0,0.15)); transform: rotate(-5deg);" 
+
+                        <img src="{{ asset('assets/img/gambar-hero.webp') }}"
+                             class="img-fluid"
+                             style="max-height: 600px; filter: drop-shadow(0 25px 50px rgba(0,0,0,0.15)); transform: rotate(-5deg);"
                              alt="Gunsas Signature Product" loading="eager">
                     </div>
                 </div>
@@ -610,7 +609,6 @@
     </section>
 
     <section id="keunggulan" class="py-5 bg-white">
-        <img src="{{ asset('assets/img/durian-kupas.png') }}" class="deco-img deco-bottom-left" alt="Hiasan Durian">
 
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -651,7 +649,6 @@
     </section>
 
     <section id="skema" class="py-5" style="background-color: #FAFAFA;">
-        <img src="{{ asset('assets/img/soes.png') }}" class="deco-img deco-center-right" style="opacity: 0.1;" alt="Hiasan Soes">
 
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -693,7 +690,7 @@
     </section>
 
    <section id="produk" class="py-5">
-    
+
     <div style="position: absolute; bottom: 0; left: 0; opacity: 0.05; pointer-events: none;">
         <img src="{{ asset('assets/img/durian-kupas.png') }}" style="width: 300px;">
     </div>
@@ -708,7 +705,7 @@
                     Menu Andalan Kami
                 </h2>
             </div>
-            
+
             <a href="{{ route('catalog.index') }}" class="btn btn-outline-dark rounded-pill px-4 fw-bold d-none d-md-inline-block">
                 Lihat Katalog Penuh <i class="fas fa-arrow-right ms-2"></i>
             </a>
@@ -718,13 +715,13 @@
             @foreach($products as $product)
             <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
                 <div class="product-card h-100 d-flex flex-column bg-white rounded-4 overflow-hidden border">
-                    
+
                     <div class="product-img-wrap position-relative bg-light" style="height: 240px; overflow: hidden;">
-                   
+
 
                         @if($product->gambar)
-                            <img src="{{ asset('storage/' . $product->gambar) }}" 
-                                 class="w-100 h-100 object-fit-cover transition-img" 
+                            <img src="{{ asset('storage/' . $product->gambar) }}"
+                                 class="w-100 h-100 object-fit-cover transition-img"
                                  alt="{{ $product->nama_produk }}">
                         @else
                             <div class="d-flex align-items-center justify-content-center h-100 text-muted">
@@ -751,13 +748,13 @@
                             @if(Auth::check() && Auth::user()->status_akun == 'active')
                                 <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
                                     @csrf
-                                    
+
                                     <div class="d-flex align-items-center justify-content-between mb-3 bg-light rounded-pill px-1 py-1 border">
                                         <button type="button" class="btn btn-sm rounded-circle text-muted" style="width: 32px; height: 32px;" onclick="updateQty(this, -5)">
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        
-                                        <input type="number" name="quantity" class="form-control border-0 bg-transparent text-center fw-bold p-0" 
+
+                                        <input type="number" name="quantity" class="form-control border-0 bg-transparent text-center fw-bold p-0"
                                                value="5" min="5" style="width: 50px;" readonly>
 
                                         <button type="button" class="btn btn-sm rounded-circle text-dark" style="width: 32px; height: 32px; background: white; shadow-sm;" onclick="updateQty(this, 5)">
@@ -932,7 +929,7 @@
         const input = form.querySelector('input[name="quantity"]');
         let currentVal = parseInt(input.value);
         let newVal = currentVal + amount;
-        
+
         // Minimal order 5 box
         if (newVal >= 5) {
             input.value = newVal;
@@ -950,6 +947,6 @@
         });
     }, 3000);
 </script>
-    
+
 </body>
 </html>
