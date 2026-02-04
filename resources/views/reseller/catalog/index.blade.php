@@ -69,67 +69,71 @@
 
 {{-- GRID PRODUK --}}
 <div class="row g-4">
-    @foreach($products as $product)
-    <div class="col-lg-3 col-md-6">
-        <div class="product-card h-100 d-flex flex-column">
-            
-            {{-- GAMBAR PRODUK --}}
-            <div class="product-img-wrap">
-                @if($product->gambar)
-                    <img src="{{ asset('storage/' . $product->gambar) }}" class="product-img" alt="{{ $product->nama_produk }}">
-                @else
-                    <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
-                        <i class="fas fa-image fa-2x"></i>
-                    </div>
-                @endif
-            </div>
-            
-            {{-- INFORMASI PRODUK --}}
-            <div class="p-4 d-flex flex-column flex-grow-1">
-                <h5 class="fw-bold mb-2 text-dark">{{ $product->nama_produk }}</h5>
-                <p class="text-muted small mb-3 flex-grow-1 lh-sm">{{ Str::limit($product->deskripsi, 50) }}</p>
-                
-                <div class="mt-auto">
-                    {{-- HARGA --}}
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <small class="text-muted fw-bold">Harga Mitra</small>
-                        <h5 class="fw-bold mb-0" style="color: var(--gunsas-green);">
-                            Rp {{ number_format($product->harga_mitra, 0, ',', '.') }}
-                        </h5>
-                    </div>
+            @foreach($products as $product)
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
+                <div class="product-card h-100 d-flex flex-column bg-white rounded-4 overflow-hidden border">
                     
-                    {{-- FORM ORDER --}}
-                    <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
-                        @csrf
-                        
-                        {{-- Input Qty dengan Tombol +/- --}}
-                        <div class="d-flex align-items-center justify-content-between mb-3 bg-light rounded-3 p-1 border">
-                            <button type="button" class="btn btn-sm text-muted" onclick="updateQty(this, -5)">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            
-                            <div class="d-flex align-items-center">
-                                <span class="small text-muted me-2">Box:</span>
-                                <input type="number" name="quantity" class="form-control border-0 bg-transparent text-center fw-bold p-0" 
-                                       value="5" min="5" style="width: 40px;" readonly>
-                            </div>
+                    <div class="product-img-wrap position-relative bg-light" style="height: 240px; overflow: hidden;">
+                   
 
-                            <button type="button" class="btn btn-sm text-dark" onclick="updateQty(this, 5)">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                        @if($product->gambar)
+                            <img src="{{ asset('storage/' . $product->gambar) }}" 
+                                 class="w-100 h-100 object-fit-cover transition-img" 
+                                 alt="{{ $product->nama_produk }}">
+                        @else
+                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                <i class="fas fa-image fa-3x opacity-25"></i>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <h5 class="fw-bold mb-2 text-dark">{{ $product->nama_produk }}</h5>
+                        <p class="text-muted small mb-3 flex-grow-1" style="line-height: 1.5;">
+                            {{ Str::limit($product->deskripsi, 60) }}
+                        </p>
+
+                        <div class="mb-3 pb-3 border-bottom">
+                            <small class="text-muted d-block fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">HARGA MITRA</small>
+                            <span class="fw-bold fs-4" style="color: var(--gunsas-green);">
+                                Rp {{ number_format($product->harga_mitra, 0, ',', '.') }}
+                            </span>
+                            <small class="text-muted">/ box</small>
                         </div>
 
-                        {{-- Tombol Submit --}}
-                        <button type="submit" class="btn-add-cart">
-                            <i class="fas fa-cart-plus me-2"></i> Masukkan Keranjang
-                        </button>
-                    </form>
+                        <div class="mt-auto">
+                            @if(Auth::check() && Auth::user()->status_akun == 'active')
+                                <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
+                                    @csrf
+                                    
+                                    <div class="d-flex align-items-center justify-content-between mb-3 bg-light rounded-pill px-1 py-1 border">
+                                        <button type="button" class="btn btn-sm rounded-circle text-muted" style="width: 32px; height: 32px;" onclick="updateQty(this, -5)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        
+                                        <input type="number" name="quantity" class="form-control border-0 bg-transparent text-center fw-bold p-0" 
+                                               value="5" min="5" style="width: 50px;" readonly>
+
+                                        <button type="button" class="btn btn-sm rounded-circle text-dark" style="width: 32px; height: 32px; background: white; shadow-sm;" onclick="updateQty(this, 5)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-2 btn-hover-gold">
+                                        <i class="fas fa-shopping-cart me-2"></i> Masukkan Keranjang
+                                    </button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}" class="btn btn-outline-dark w-100 rounded-pill fw-bold py-2">
+                                    Masuk untuk Memesan
+                                </a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
+            @endforeach
         </div>
-    </div>
-    @endforeach
-</div>
 
 {{-- CSS KHUSUS KATALOG (Agar Tampilan Konsisten dengan Landing Page) --}}
 <style>
