@@ -97,7 +97,7 @@
                 <i class="fas fa-sync-alt me-2"></i> Cek Status Sekarang
             </a>
 
-            <a href="https://wa.me/6282194229108?text=Halo%20Admin,%20saya%20sudah%20upload%20data%20reseller%20atas%20nama%20{{ auth()->user()->name }}.%20Mohon%20segera%20diverifikasi."
+            <a href="https://wa.me/6285180816488?text=Halo%20Admin,%20saya%20sudah%20upload%20data%20reseller%20atas%20nama%20{{ auth()->user()->name }}.%20Mohon%20segera%20diverifikasi."
                target="_blank" class="btn btn-outline-gold rounded-pill mt-1">
                 <i class="fab fa-whatsapp me-2"></i> Hubungi Admin
             </a>
