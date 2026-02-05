@@ -19,8 +19,8 @@ class DashboardController extends Controller
     // 2. FILTER BERDASARKAN ROLE
     if ($user->role == 'staff') {
         // Staff cuma hitung data tokonya sendiri
-        $paidOrders = $orders->where('toko_id', $user->toko_id)
-                                ->where('status', 'sudah_bayar') // Staff fokus ke yang sudah bayar utk disiapkan
+        $readyOrders = $orders->where('toko_id', $user->toko_id)
+                                ->where('status', 'siap_diambil') // Staff fokus ke yang sudah bayar utk disiapkan
                                 ->count();
 
         // Pendapatan Toko Ini Saja
@@ -46,6 +46,6 @@ class DashboardController extends Controller
         $recentOrders = \App\Models\Order::with(['user', 'toko'])->latest()->take(5)->get();
     }
 
-    return view('admin.dashboard', compact('paidOrders', 'totalRevenue', 'totalResellers', 'recentOrders'));
+    return view('admin.dashboard', compact('readyOrders','paidOrders', 'totalRevenue', 'totalResellers', 'recentOrders'));
 }
 }

@@ -15,7 +15,9 @@
                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                         {{ auth()->user()->role == 'staff' ? 'Pesanan Masuk (Toko Anda)' : 'Pesanan Baru (Perlu di Proses)' }}
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $paidOrders }}</div>
+                   <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{ auth()->user()->role == 'staff' ? $readyOrders : $paidOrders }}
+                    </div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-calendar fa-2x text-gray-300"></i>
